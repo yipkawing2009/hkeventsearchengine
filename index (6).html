@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HK 活動通 · HK Events</title>
+  <meta name="description" content="香港活動資訊｜市集｜展覽｜音樂會｜親子｜運動">
+  <style>
+    :root {
+      --radius: 14px;
+      --gap: 12px;
+      --shadow: 0 6px 24px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang HK", "PingFang SC", "Noto Sans CJK HK", "Microsoft JhengHei", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      background: #f7f7fb;
+      color: #171717;
+    }
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: #ffffffcc; backdrop-filter: saturate(180%) blur(12px);
+      border-bottom: 1px solid #eee;
+    }
+    .container { max-width: 980px; margin: 0 auto; padding: 16px; }
+    .brand {
+      display: flex; align-items: center; gap: 12px; padding: 6px 0;
+    }
+    .brand h1 { margin: 0; font-size: 20px; }
+    .brand small { color: #666; }
+    .filters {
+      display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: var(--gap);
+      margin-top: 12px;
+    }
+    .filters input, .filters select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd; border-radius: 10px; background: #fff;
+    }
+    .chipbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+    .chip {
+      padding: 6px 10px; background: #fff; border: 1px solid #eee; border-radius: 20px; cursor: pointer;
+    }
+    .chip.active { background: #111; color: #fff; }
+    .grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;
+    }
+    @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } .filters{ grid-template-columns: 1fr 1fr; } }
+    .card {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .badge { display:inline-block; font-size:12px; background:#111; color:#fff; padding:4px 8px; border-radius:12px; }
+    .thumb { width:100%; height: 160px; background: linear-gradient(120deg,#fafafa,#f0f0f0); display:flex; align-items:center; justify-content:center; color:#777; font-size:14px; }
+    .content { padding: 14px; display:flex; flex-direction:column; gap:8px; }
+    .title { margin:0; font-size: 18px; }
+    .meta { color:#555; font-size: 14px; }
+    .tags { display:flex; gap:6px; flex-wrap: wrap; }
+    .tag { font-size:12px; background:#f1f1f1; padding:2px 8px; border-radius: 10px; }
+    .actions { margin-top: 8px; display:flex; gap: 8px; }
+    .btn {
+      padding: 10px 14px; border-radius: 10px; border:1px solid #ddd; background:#fff; cursor:pointer;
+    }
+    .btn.primary { background:#111; color:#fff; border-color:#111; }
+    .footer { color:#666; text-align:center; padding: 32px 12px; }
+    .empty { text-align:center; color:#666; padding: 24px; }
+    .toolbar { display:flex; align-items:center; gap:8px; justify-content:space-between; margin-top: 8px; }
+    .toolbar .right { display:flex; gap:8px; }
+    .pill { border:1px solid #ddd; padding:8px 12px; border-radius:999px; background:#fff; }
+    a { color:inherit; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="brand">
+        <h1>HK 活動通</h1>
+        <small>市集 · 展覽 · 音樂 · 親子 · 運動</small>
+      </div>
+      <div class="toolbar">
+        <input id="q" class="pill" placeholder="搜尋活動名稱、地點、標籤…" />
+        <div class="right">
+          <select id="sort" class="pill">
+            <option value="soonest">按日期（最近）</option>
+            <option value="popular">按人氣</option>
+            <option value="newest">按新增</option>
+          </select>
+          <a id="submitLink" class="pill" href="https://forms.gle/submit-your-event" target="_blank" rel="noopener">提交活動</a>
+        </div>
+      </div>
+      <div class="filters">
+        <select id="district">
+          <option value="">全部地區</option>
+          <option>Hong Kong Island</option>
+          <option>Kowloon</option>
+          <option>New Territories</option>
+        </select>
+        <select id="category">
+          <option value="">全部類別</option>
+          <option>Market</option>
+          <option>Music</option>
+          <option>Expo</option>
+          <option>Sports</option>
+          <option>Family</option>
+          <option>Art</option>
+        </select>
+        <input id="from" type="date" />
+        <input id="to" type="date" />
+      </div>
+      <div class="chipbar" id="quickChips">
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="list" class="grid"></div>
+    <div id="empty" class="empty" style="display:none">沒有符合條件的活動。</div>
+    <div class="footer">
+      <div>© 2025 HK 活動通 · <a href="#" onclick="exportCSV();return false;">匯出 CSV</a></div>
+      <div style="margin-top:6px; font-size: 13px;">如何賺錢：活動置頂（Featured）、商戶推廣、App 內廣告、售票分成。</div>
+    </div>
+  </main>
+
+  <script>
+  // --- Sample data (可改為 fetch 外部 JSON) ---
+  const EVENTS = [{"id": "evt001", "title": "中環海濱聖誕市集", "category": "Market", "district": "Hong Kong Island", "venue": "中環海濱活動空間", "start_date": "2025-12-05", "end_date": "2025-12-26", "start_time": "12:00", "end_time": "22:00", "price": "免費入場", "tags": ["市集", "聖誕", "親子"], "url": "https://example.com/event/christmas-market", "image": "", "featured": true, "popularity": 80, "desc": "超過 100 個攤位、音樂表演、聖誕燈飾打卡位。"}, {"id": "evt002", "title": "尖沙咀跨年倒數音樂會", "category": "Music", "district": "Kowloon", "venue": "尖沙咀海濱長廊", "start_date": "2025-12-31", "end_date": "2025-12-31", "start_time": "20:00", "end_time": "00:30", "price": "免費", "tags": ["跨年", "音樂會", "露天"], "url": "https://example.com/event/countdown", "image": "", "featured": true, "popularity": 95, "desc": "現場樂隊表演、煙花倒數，一齊迎接 2026！"}, {"id": "evt003", "title": "荃灣本地手作市集", "category": "Market", "district": "New Territories", "venue": "荃新天地廣場", "start_date": "2025-11-22", "end_date": "2025-11-23", "start_time": "11:00", "end_time": "20:00", "price": "免費", "tags": ["手作", "本地品牌"], "url": "https://example.com/event/tsuenwan-handmade", "image": "", "featured": false, "popularity": 60, "desc": "集合本地手作人、工作坊及小型音樂演出。"}, {"id": "evt004", "title": "灣仔設計展", "category": "Expo", "district": "Hong Kong Island", "venue": "灣仔會展", "start_date": "2025-11-28", "end_date": "2025-12-02", "start_time": "10:00", "end_time": "19:00", "price": "HKD 60", "tags": ["設計", "展覽", "創科"], "url": "https://example.com/event/design-fair", "image": "", "featured": false, "popularity": 70, "desc": "年度設計盛事，集合亞洲區品牌及新銳設計師。"}, {"id": "evt005", "title": "港島10K 路跑賽", "category": "Sports", "district": "Hong Kong Island", "venue": "維多利亞公園起步", "start_date": "2026-01-12", "end_date": "2026-01-12", "start_time": "07:30", "end_time": "10:30", "price": "HKD 180", "tags": ["跑步", "運動"], "url": "https://example.com/event/hk10k", "image": "", "featured": false, "popularity": 50, "desc": "城市跑賽，設 5K / 10K 組別。"}, {"id": "evt006", "title": "親子科學玩樂日", "category": "Family", "district": "Kowloon", "venue": "九龍灣展貿中心", "start_date": "2025-12-14", "end_date": "2025-12-14", "start_time": "10:00", "end_time": "18:00", "price": "HKD 50（成人）/ 兒童免費", "tags": ["親子", "科學", "教育"], "url": "https://example.com/event/family-science", "image": "", "featured": false, "popularity": 65, "desc": "互動科學攤位、STEM 體驗、兒童舞台節目。"}, {"id": "evt007", "title": "屯門二手寶藏跳蚤市場", "category": "Market", "district": "New Territories", "venue": "屯門市廣場", "start_date": "2025-12-07", "end_date": "2025-12-07", "start_time": "12:00", "end_time": "19:00", "price": "免費", "tags": ["二手", "環保"], "url": "https://example.com/event/flea-market", "image": "", "featured": false, "popularity": 55, "desc": "以物易物、環保再用，尋寶樂趣無窮。"}, {"id": "evt008", "title": "本地獨立電影放映週", "category": "Art", "district": "Kowloon", "venue": "油麻地戲院", "start_date": "2025-11-27", "end_date": "2025-12-03", "start_time": "18:30", "end_time": "22:30", "price": "HKD 80", "tags": ["電影", "藝術"], "url": "https://example.com/event/indie-film", "image": "", "featured": false, "popularity": 45, "desc": "多場本地短片及長片展映，映後談分享。"}];
+
+  const S = {
+    q: document.getElementById('q'),
+    district: document.getElementById('district'),
+    category: document.getElementById('category'),
+    from: document.getElementById('from'),
+    to: document.getElementById('to'),
+    sort: document.getElementById('sort'),
+    list: document.getElementById('list'),
+    empty: document.getElementById('empty'),
+    chips: document.getElementById('quickChips')
+  };
+
+  const QUICK = [
+    { label: "本週末", type: "range", value: "weekend" },
+    { label: "免費", type: "tag", value: "免費" },
+    { label: "市集", type: "category", value: "Market" },
+    { label: "親子", type: "category", value: "Family" },
+    { label: "音樂", type: "category", value: "Music" },
+  ];
+
+  let state = {
+    q: "", district: "", category: "", from: "", to: "", sort: "soonest",
+    activeChip: null
+  };
+
+  function init() {
+    const today = new Date().toISOString().slice(0,10);
+    S.from.value = today;
+
+    QUICK.forEach((c, i) => {
+      const el = document.createElement('button');
+      el.className = 'chip';
+      el.textContent = c.label;
+      el.onclick = () => toggleChip(i);
+      S.chips.appendChild(el);
+    });
+
+    bind();
+    render();
+  }
+
+  function toggleChip(i) {
+    state.activeChip = state.activeChip === i ? null : i;
+    state.category = ""; S.category.value = "";
+    S.q.value = ""; state.q = "";
+    const c = QUICK[i];
+    if (state.activeChip !== null) {
+      if (c.type === "category") { state.category = c.value; S.category.value = c.value; }
+      if (c.type === "tag") { state.q = c.value; S.q.value = c.value; }
+      if (c.type === "range" && c.value === "weekend") {
+        const now = new Date();
+        const day = now.getDay();
+        const diffToSat = (6 - day + 7) % 7;
+        const sat = new Date(now.getFullYear(), now.getMonth(), now.getDate() + diffToSat);
+        const sun = new Date(now.getFullYear(), now.getMonth(), now.getDate() + diffToSat + 1);
+        S.from.value = sat.toISOString().slice(0,10);
+        S.to.value = sun.toISOString().slice(0,10);
+      }
+    } else {
+      S.to.value = "";
+    }
+    highlightChips();
+    render();
+  }
+
+  function highlightChips() {
+    [...S.chips.children].forEach((el, idx) => {
+      el.classList.toggle('active', idx === state.activeChip);
+    });
+  }
+
+  function bind() {
+    S.q.oninput = () => { state.q = S.q.value.trim(); render(); };
+    S.district.onchange = () => { state.district = S.district.value; render(); };
+    S.category.onchange = () => { state.category = S.category.value; render(); };
+    S.from.onchange = () => { state.from = S.from.value; render(); };
+    S.to.onchange = () => { state.to = S.to.value; render(); };
+    S.sort.onchange = () => { state.sort = S.sort.value; render(); };
+  }
+
+  function inRange(ev, from, to) {
+    const s = new Date(ev.start_date);
+    const e = new Date(ev.end_date || ev.start_date);
+    const f = from ? new Date(from) : null;
+    const t = to ? new Date(to) : null;
+    if (f && e < f) return false;
+    if (t && s > t) return false;
+    return true;
+  }
+
+  function render() {
+    const q = state.q.toLowerCase();
+    let rows = [...EVENTS];
+
+    rows = rows.filter(ev => inRange(ev, S.from.value, S.to.value));
+    if (state.district) rows = rows.filter(ev => ev.district === state.district);
+    if (state.category) rows = rows.filter(ev => ev.category === state.category);
+    if (q) rows = rows.filter(ev =>
+      (ev.title + " " + ev.venue + " " + ev.tags.join(" ") + " " + (ev.desc||"")).toLowerCase().includes(q)
+    );
+
+    if (state.sort === "soonest") rows.sort((a,b) => new Date(a.start_date) - new Date(b.start_date));
+    if (state.sort === "popular") rows.sort((a,b) => (b.featured?1000:0)+b.popularity - ((a.featured?1000:0)+a.popularity));
+    if (state.sort === "newest") rows.reverse();
+
+    S.list.innerHTML = "";
+    S.empty.style.display = rows.length ? "none" : "block";
+
+    rows.forEach(ev => S.list.appendChild(card(ev)));
+  }
+
+  function fmtDate(ev) {
+    if (ev.start_date === ev.end_date) return ev.start_date;
+    return ev.start_date + " — " + ev.end_date;
+  }
+
+  function card(ev) {
+    const el = document.createElement('article');
+    el.className = "card";
+    el.innerHTML = `
+      <div class="thumb">{{thumb}}</div>
+      <div class="content">
+        <div>${ev.featured ? '<span class="badge">Featured</span>' : ''}</div>
+        <h3 class="title">${ev.title}</h3>
+        <div class="meta">📍 ${ev.venue} · ${ev.district}</div>
+        <div class="meta">🗓️ ${fmtDate(ev)} · ⏰ ${ev.start_time}–${ev.end_time}</div>
+        <div class="meta">💵 ${ev.price}</div>
+        <div class="tags">
+          <span class="tag">${ev.category}</span>
+          ${ev.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="${ev.url}" target="_blank" rel="noopener">活動連結</a>
+          <button class="btn" onclick="copyShare('${ev.id}')">分享</button>
+        </div>
+      </div>
+    `.replace("{{thumb}}", ev.image ? `<img alt="" src="${ev.image}" style="width:100%;height:100%;object-fit:cover"/>` : "活動海報");
+    return el;
+  }
+
+  function copyShare(id) {
+    const url = new URL(window.location);
+    url.searchParams.set("id", id);
+    navigator.clipboard.writeText(url.toString());
+    alert("已複製分享連結");
+  }
+
+  function exportCSV() {
+    const cols = ["id","title","category","district","venue","start_date","end_date","start_time","end_time","price","tags","url","featured","popularity","desc"];
+    const lines = [cols.join(",")];
+    EVENTS.forEach(ev => {
+      const row = cols.map(k => {
+        let v = ev[k];
+        if (Array.isArray(v)) v = v.join("|");
+        if (typeof v === 'string' && (v.includes(',') || v.includes('\n'))) v = '"' + v.replaceAll('"','""') + '"';
+        return v;
+      });
+      lines.push(row.join(","));
+    });
+    const blob = new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "hk_events.csv";
+    a.click();
+  }
+
+  // Optional: fetch external JSON file (events.json) if exists
+  fetch("events.json").then(r => r.ok ? r.json() : Promise.reject()).then(data => {
+    if (Array.isArray(data) && data.length) {
+      EVENTS.length = 0; data.forEach(x => EVENTS.push(x));
+      render();
+    }
+  }).catch(() => { /* ignore */ });
+
+  init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+[
+  {
+    "id": "evt001",
+    "title": "中環海濱聖誕市集",
+    "category": "Market",
+    "district": "Hong Kong Island",
+    "venue": "中環海濱活動空間",
+    "start_date": "2025-12-05",
+    "end_date": "2025-12-26",
+    "start_time": "12:00",
+    "end_time": "22:00",
+    "price": "免費入場",
+    "tags": [
+      "市集",
+      "聖誕",
+      "親子"
+    ],
+    "url": "https://example.com/event/christmas-market",
+    "image": "",
+    "featured": true,
+    "popularity": 80,
+    "desc": "超過 100 個攤位、音樂表演、聖誕燈飾打卡位。"
+  },
+  {
+    "id": "evt002",
+    "title": "尖沙咀跨年倒數音樂會",
+    "category": "Music",
+    "district": "Kowloon",
+    "venue": "尖沙咀海濱長廊",
+    "start_date": "2025-12-31",
+    "end_date": "2025-12-31",
+    "start_time": "20:00",
+    "end_time": "00:30",
+    "price": "免費",
+    "tags": [
+      "跨年",
+      "音樂會",
+      "露天"
+    ],
+    "url": "https://example.com/event/countdown",
+    "image": "",
+    "featured": true,
+    "popularity": 95,
+    "desc": "現場樂隊表演、煙花倒數，一齊迎接 2026！"
+  },
+  {
+    "id": "evt003",
+    "title": "荃灣本地手作市集",
+    "category": "Market",
+    "district": "New Territories",
+    "venue": "荃新天地廣場",
+    "start_date": "2025-11-22",
+    "end_date": "2025-11-23",
+    "start_time": "11:00",
+    "end_time": "20:00",
+    "price": "免費",
+    "tags": [
+      "手作",
+      "本地品牌"
+    ],
+    "url": "https://example.com/event/tsuenwan-handmade",
+    "image": "",
+    "featured": false,
+    "popularity": 60,
+    "desc": "集合本地手作人、工作坊及小型音樂演出。"
+  },
+  {
+    "id": "evt004",
+    "title": "灣仔設計展",
+    "category": "Expo",
+    "district": "Hong Kong Island",
+    "venue": "灣仔會展",
+    "start_date": "2025-11-28",
+    "end_date": "2025-12-02",
+    "start_time": "10:00",
+    "end_time": "19:00",
+    "price": "HKD 60",
+    "tags": [
+      "設計",
+      "展覽",
+      "創科"
+    ],
+    "url": "https://example.com/event/design-fair",
+    "image": "",
+    "featured": false,
+    "popularity": 70,
+    "desc": "年度設計盛事，集合亞洲區品牌及新銳設計師。"
+  },
+  {
+    "id": "evt005",
+    "title": "港島10K 路跑賽",
+    "category": "Sports",
+    "district": "Hong Kong Island",
+    "venue": "維多利亞公園起步",
+    "start_date": "2026-01-12",
+    "end_date": "2026-01-12",
+    "start_time": "07:30",
+    "end_time": "10:30",
+    "price": "HKD 180",
+    "tags": [
+      "跑步",
+      "運動"
+    ],
+    "url": "https://example.com/event/hk10k",
+    "image": "",
+    "featured": false,
+    "popularity": 50,
+    "desc": "城市跑賽，設 5K / 10K 組別。"
+  },
+  {
+    "id": "evt006",
+    "title": "親子科學玩樂日",
+    "category": "Family",
+    "district": "Kowloon",
+    "venue": "九龍灣展貿中心",
+    "start_date": "2025-12-14",
+    "end_date": "2025-12-14",
+    "start_time": "10:00",
+    "end_time": "18:00",
+    "price": "HKD 50（成人）/ 兒童免費",
+    "tags": [
+      "親子",
+      "科學",
+      "教育"
+    ],
+    "url": "https://example.com/event/family-science",
+    "image": "",
+    "featured": false,
+    "popularity": 65,
+    "desc": "互動科學攤位、STEM 體驗、兒童舞台節目。"
+  },
+  {
+    "id": "evt007",
+    "title": "屯門二手寶藏跳蚤市場",
+    "category": "Market",
+    "district": "New Territories",
+    "venue": "屯門市廣場",
+    "start_date": "2025-12-07",
+    "end_date": "2025-12-07",
+    "start_time": "12:00",
+    "end_time": "19:00",
+    "price": "免費",
+    "tags": [
+      "二手",
+      "環保"
+    ],
+    "url": "https://example.com/event/flea-market",
+    "image": "",
+    "featured": false,
+    "popularity": 55,
+    "desc": "以物易物、環保再用，尋寶樂趣無窮。"
+  },
+  {
+    "id": "evt008",
+    "title": "本地獨立電影放映週",
+    "category": "Art",
+    "district": "Kowloon",
+    "venue": "油麻地戲院",
+    "start_date": "2025-11-27",
+    "end_date": "2025-12-03",
+    "start_time": "18:30",
+    "end_time": "22:30",
+    "price": "HKD 80",
+    "tags": [
+      "電影",
+      "藝術"
+    ],
+    "url": "https://example.com/event/indie-film",
+    "image": "",
+    "featured": false,
+    "popularity": 45,
+    "desc": "多場本地短片及長片展映，映後談分享。"
+  }
+]
